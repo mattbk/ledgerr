@@ -24,15 +24,26 @@ journal<-rbind(journal1,journal2)
 ## Clean up
 # Date is date
 journal$Date<-as.Date(journal$Date,format="%m/%d/%Y")
+# Class is a factor
+journal$Class<-as.factor(journal$Class)
 # Debit and Credit are numeric, without commas
 journal$Debit<-as.numeric(sub(",","",journal$Debit))
 journal$Credit<-as.numeric(sub(",","",journal$Credit))
 
 # Start thinking about reports
-# All time net, should be function
+# All time net
+# TODO should be function
 net<-sum(journal$Credit,na.rm=T)-sum(journal$Debit,na.rm=T)
 
-# Net by class and date range, should be function
+# Net by class and date range
+# TODO should be function that uses the net function above
+classes<-levels(journal$Class)
+
+for (i in 1:length(classes))
+{ print(paste(classes[i],
+        " net is ",
+        sum(journal$Credit[journal$Class==classes[i]],na.rm=T)-sum(journal$Debit[journal$Class==classes[i]],na.rm=T)))
+}
 
 # See other reports in QB and Ledger
 
