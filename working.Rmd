@@ -30,19 +30,24 @@ journal$Class<-as.factor(journal$Class)
 journal$Debit<-as.numeric(sub(",","",journal$Debit))
 journal$Credit<-as.numeric(sub(",","",journal$Credit))
 
-# Start thinking about reports
-# All time net
-# TODO should be function
-net<-sum(journal$Credit,na.rm=T)-sum(journal$Debit,na.rm=T)
+## Temp function location
+# All time net, takes journal as an argument 
+net.calc<-function(journ){
+  net<-sum(journ$Credit,na.rm=T)-sum(journ$Debit,na.rm=T)
+  return(net)
+}
 
 # Net by class and date range
 # TODO should be function that uses the net function above
 classes<-levels(journal$Class)
-
+net.byclass<-data.frame(Class=character(),
+                        Net=numeric(),
+                        stringsAsFactors=FALSE)
 for (i in 1:length(classes))
-{ print(paste(classes[i],
-        " net is ",
-        sum(journal$Credit[journal$Class==classes[i]],na.rm=T)-sum(journal$Debit[journal$Class==classes[i]],na.rm=T)))
+{ net.byclass[i,] <- c(as.character(classes[i]),
+                       sum(journal$Credit[journal$Class==classes[i]],
+                           na.rm=T)-sum(journal$Debit[journal$Class==classes[i]],
+                                        na.rm=T))
 }
 
 # See other reports in QB and Ledger
