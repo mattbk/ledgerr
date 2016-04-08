@@ -24,16 +24,24 @@ journal<-rbind(journal1,journal2)
 ## Clean up
 # Date is date
 journal$Date<-as.Date(journal$Date,format="%m/%d/%Y")
+# Replace empty classes
+journal$Class[journal$Class==""]<-c("unclassified")
 # Class is a factor
 journal$Class<-as.factor(journal$Class)
+# Empty class should be NA
 # Debit and Credit are numeric, without commas
 journal$Debit<-as.numeric(sub(",","",journal$Debit))
 journal$Credit<-as.numeric(sub(",","",journal$Credit))
 
 ## Temp function location
-# All time net, takes journal as an argument 
-net.calc<-function(journ){
-  net<-sum(journ$Credit,na.rm=T)-sum(journ$Debit,na.rm=T)
+# All time net, takes journal and class name(s) as an argument 
+net<-function(journ,classselect="all"){
+  if("all" %in% classselect)
+    classselect<-levels(journ$Class)
+  print(classselect)
+  net<-sum(journ$Credit[journ$Class %in% classselect],
+           na.rm=T)-sum(journ$Debit[journ$Class %in% classselect],
+                        na.rm=T)
   return(net)
 }
 
@@ -52,8 +60,6 @@ for (i in 1:length(classes))
                            na.rm=T)-sum(journal$Debit[journal$Class==classes[i]],
                                         na.rm=T))
 }
-# Identify empty class
-net.byclass$Class[net.byclass$Class==""] <- "Unclassified"
 # Add total net row
 net.byclass[nrow(net.byclass)+1,]<-c("Total",net.calc(journal))
 
