@@ -39,16 +39,23 @@ net.calc<-function(journ){
 
 # Net by class and date range
 # TODO should be function that uses the net function above
+# List of classes
 classes<-levels(journal$Class)
+# Set up data frame
 net.byclass<-data.frame(Class=character(),
                         Net=numeric(),
                         stringsAsFactors=FALSE)
+# Loop through classes, calculate net, and add to data frame
 for (i in 1:length(classes))
 { net.byclass[i,] <- c(as.character(classes[i]),
                        sum(journal$Credit[journal$Class==classes[i]],
                            na.rm=T)-sum(journal$Debit[journal$Class==classes[i]],
                                         na.rm=T))
 }
+# Identify empty class
+net.byclass$Class[net.byclass$Class==""] <- "Unclassified"
+# Add total net row
+net.byclass[nrow(net.byclass)+1,]<-c("Total",net.calc(journal))
 
 # See other reports in QB and Ledger
 
