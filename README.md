@@ -8,4 +8,5 @@ Work in progress.
 Uses Google Sheets for data entry, R for reporting and analysis.
 
 |Date|Ref No.|Payee|Memo|Class|Debit|Credit|Bank|Reconciliation Status|Balance|Type|Account|
+|--- |---    |---  |--- |---  |---  |---   |--- |---                  |---    |--- |---    | 
 
