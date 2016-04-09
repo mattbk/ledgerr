@@ -35,10 +35,10 @@ journal$Credit<-as.numeric(sub(",","",journal$Credit))
 
 ## Temp function location
 # All time net, takes journal and class name(s) as an argument 
+# TODO add date selection, take two dates only e.g., c("2015-01-01","2015-12-31") and test first
 net<-function(journ,classselect="all"){
   if("all" %in% classselect)
     classselect<-levels(journ$Class)
-  print(classselect)
   net<-sum(journ$Credit[journ$Class %in% classselect],
            na.rm=T)-sum(journ$Debit[journ$Class %in% classselect],
                         na.rm=T)
@@ -55,13 +55,11 @@ net.byclass<-data.frame(Class=character(),
                         stringsAsFactors=FALSE)
 # Loop through classes, calculate net, and add to data frame
 for (i in 1:length(classes))
-{ net.byclass[i,] <- c(as.character(classes[i]),
-                       sum(journal$Credit[journal$Class==classes[i]],
-                           na.rm=T)-sum(journal$Debit[journal$Class==classes[i]],
+{ net.byclass[i,] <- c(as.character(classes[i]),  sum(journal$Credit[journal$Class==classes[i]], na.rm=T) - sum(journal$Debit[journal$Class==classes[i]], 
                                         na.rm=T))
 }
 # Add total net row
-net.byclass[nrow(net.byclass)+1,]<-c("Total",net.calc(journal))
+net.byclass[nrow(net.byclass)+1,]<-c("Total",net(journal))
 
 # See other reports in QB and Ledger
 
