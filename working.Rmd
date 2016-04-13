@@ -36,11 +36,15 @@ journal$Credit<-as.numeric(sub(",","",journal$Credit))
 ## Temp function location
 # All time net, takes journal and class name(s) as an argument 
 # TODO add date selection, take two dates only e.g., c("2015-01-01","2015-12-31") and test first
-net<-function(journ,classselect="all"){
-  if("all" %in% classselect)
+net<-function(journ,classselect="all",dates="all"){
+  if("all" %in% classselect) {
     classselect<-levels(journ$Class)
-  net<-sum(journ$Credit[journ$Class %in% classselect],
-           na.rm=T)-sum(journ$Debit[journ$Class %in% classselect],
+  }
+  if("all" %in% dates) {
+    dates<-c(min(journ$Date),max(journ$Date))
+  }
+  net<-sum(journ$Credit[journ$Class %in% classselect & journ$Date>=dates[1] & journ$Date<=dates[2]],
+           na.rm=T)-sum(journ$Debit[journ$Class %in% classselect  & journ$Date>=dates[1] & journ$Date<=dates[2]],
                         na.rm=T)
   return(net)
 }
