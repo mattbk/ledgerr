@@ -1,3 +1,14 @@
+#' Calculate net per account and present as a table
+#' 
+#' This function reads in your journal, subsets it according to queries, calculates net for each account, and prints a table..
+#' @param journ Journal dataframe
+#' @param classselect Which classes to include. c("class1","class2",...). Defaults to "all".
+#' @param accselect Which accounts to include. c("class1","class2",...). Defaults to "all".
+#' @param dates Date range to include. c("2014-01-01","2014-12-31"). Defaults to "all".
+#' @keywords net account
+#' @export
+#' @examples
+#' net.account()
 net.acc<-function(journ,
                   classselect="all",
                   accselect="all",
