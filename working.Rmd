@@ -56,7 +56,11 @@ net<-function(journ,classselect="all",accselect="all",dates="all"){
 ##########
 
 ########## Net table by class
-net.class<-function(journ,classselect="all",dates="all",total=F) {
+net.class<-function(journ,
+                    classselect="all",
+                    accselect="all",
+                    dates="all",
+                    total=F) {
 # List of classes
   if("all" %in% classselect) {
     classselect<-levels(journ$Class)
@@ -70,6 +74,7 @@ for (i in 1:length(classselect)) {
   net.class.out[i,] <- c(classselect[i],
                        net(journ,
                            classselect=classselect[i],
+                           accselect=accselect,
                            dates="all"))
   }
 # Add total net row
@@ -83,8 +88,12 @@ return(net.class.out)
 #work in progress
 
 ########## Net table by account
-net.acc<-function(journ,accselect="all",dates="all",total=F) {
-# List of classes
+net.acc<-function(journ,
+                  classselect="all",
+                  accselect="all",
+                  dates="all",
+                  total=F) {
+# List of classes - need to do this here before passing to net()
   if("all" %in% accselect) {
     accselect<-unique(journ$Account)
   }
@@ -96,11 +105,12 @@ net.acc.out<-data.frame(Account=character(),
 for (i in 1:length(accselect)) {
   net.acc.out[i,] <- c(as.character(accselect[i]),
                        net(journ,
+                           classselect=classselect,
                            accselect=accselect[i],
                            dates=dates))
 }
 # Sort by account name
-net.acc.out<-net.acc.out[order(Account) , ]
+net.acc.out<-net.acc.out[order(net.acc.out$Account) , ]
 # Add total net row
 if(total) {
   net.acc.out[nrow(net.acc.out)+1,]<-c("Total",net(journal))
