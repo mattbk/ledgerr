@@ -37,4 +37,28 @@ journal$Credit<-as.numeric(sub(",","",journal$Credit))
 
 # See other reports in QB and Ledger
 
+################# work in progress
+
+# This could replace net.acc, check numbers
+a<-aggregate(cbind(Credit,Debit=-Debit)~Account,data=journal,function(x) sum(x, na.rm=TRUE),na.action="na.pass")
+# na.pass: http://stackoverflow.com/a/16844940/2152245
+# Calculate net column
+a$Net<-rowSums(a[,2:3],na.rm=T)
+# Calculate total--need to clean up
+colSums(a[-1])
+
+# This is a column rename on the fly: "Debit=-Debit"
+
+# This could replace net.class, check numbers
+a<-aggregate(cbind(Credit,Debit=-Debit)~Class,data=journal,function(x) sum(x, na.rm=TRUE),na.action="na.pass")
+# Calculate net column
+a$Net<-rowSums(a[,2:3],na.rm=T)
+# Calculate total--need to clean up
+colSums(a[-1])
+
+# This could also replace net.class if in the right layout (http://nicercode.github.io/guides/repeating-things/)
+class.split<-split(journal,journal$Class)
+sapply(class.split, net)
+
+
 ```
