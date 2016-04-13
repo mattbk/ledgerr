@@ -24,10 +24,12 @@ journal<-rbind(journal1,journal2)
 ## Clean up
 # Date is date
 journal$Date<-as.Date(journal$Date,format="%m/%d/%Y")
-# Replace empty classes
+# Replace empty classes and accounrs
 journal$Class[journal$Class==""]<-c("unclassified")
-# Class is a factor
+journal$Account[journal$Account==""]<-c("unclassified")
+# Class, Accounts are factors
 journal$Class<-as.factor(journal$Class)
+journal$Account<-as.factor(journal$Account)
 # Empty class should be NA
 # Debit and Credit are numeric, without commas
 journal$Debit<-as.numeric(sub(",","",journal$Debit))
@@ -36,15 +38,18 @@ journal$Credit<-as.numeric(sub(",","",journal$Credit))
 ## Temp function location
 # TODO learn where to store functions
 ########## net() function, takes journal, class name(s), and date range as arguments
-net<-function(journ,classselect="all",dates="all"){
+net<-function(journ,classselect="all",accselect="all",dates="all"){
   if("all" %in% classselect) {
     classselect<-levels(journ$Class)
   }
+  if("all" %in% accselect) {
+    accselect<-levels(journ$Account)
+  }  
   if("all" %in% dates) {
     dates<-c(min(journ$Date),max(journ$Date))
   }
-  net<-sum(journ$Credit[journ$Class %in% classselect & journ$Date>=dates[1] & journ$Date<=dates[2]],
-           na.rm=T)-sum(journ$Debit[journ$Class %in% classselect  & journ$Date>=dates[1] & journ$Date<=dates[2]],
+  net<-sum(journ$Credit[journ$Class %in% classselect & journ$Account %in% accselect & journ$Date>=dates[1] & journ$Date<=dates[2]],
+           na.rm=T)-sum(journ$Debit[journ$Class %in% classselect & journ$Account %in% accselect & journ$Date>=dates[1] & journ$Date<=dates[2]],
                         na.rm=T)
   return(net)
 }
@@ -63,9 +68,9 @@ net.class.out<-data.frame(Class=character(),
 # Loop through classes, calculate net, and add to data frame
 for (i in 1:length(classselect)) {
   net.class.out[i,] <- c(classselect[i],
-                       net(journal,
-                           classselect[i],
-                           "all"))
+                       net(journ,
+                           classselect=classselect[i],
+                           dates="all"))
   }
 # Add total net row
 if(total) {
@@ -75,6 +80,34 @@ return(net.class.out)
 }
 ##########
 
+#work in progress
+
+########## Net table by account
+net.acc<-function(journ,accselect="all",dates="all",total=F) {
+# List of classes
+  if("all" %in% accselect) {
+    accselect<-unique(journ$Account)
+  }
+# Set up data frame
+net.acc.out<-data.frame(Account=character(),
+                        Net=numeric(),
+                        stringsAsFactors=FALSE)
+# Loop through accounts, calculate net, and add to data frame
+for (i in 1:length(accselect)) {
+  net.acc.out[i,] <- c(as.character(accselect[i]),
+                       net(journ,
+                           accselect=accselect[i],
+                           dates=dates))
+}
+# Sort by account name
+net.acc.out<-net.acc.out[order(Account) , ]
+# Add total net row
+if(total) {
+  net.acc.out[nrow(net.acc.out)+1,]<-c("Total",net(journal))
+  }
+return(net.acc.out)
+}
+##########
 
 
 
