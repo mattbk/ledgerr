@@ -36,7 +36,7 @@ journal$Debit<-as.numeric(sub(",","",journal$Debit))
 journal$Credit<-as.numeric(sub(",","",journal$Credit))
 
 ## Temp function location
-# TODO learn where to store functions
+# TODO https://github.com/mattbk/ledgerr/issues/1
 ########## net() function, takes journal, class name(s), and date range as arguments
 net<-function(journ,classselect="all",accselect="all",dates="all"){
   if("all" %in% classselect) {
@@ -84,8 +84,6 @@ if(total) {
 return(net.class.out)
 }
 ##########
-
-#work in progress
 
 ########## Net table by account
 net.acc<-function(journ,
