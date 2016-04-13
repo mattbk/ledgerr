@@ -36,24 +36,6 @@ journal$Debit<-as.numeric(sub(",","",journal$Debit))
 journal$Credit<-as.numeric(sub(",","",journal$Credit))
 
 ## Temp function location
-# TODO https://github.com/mattbk/ledgerr/issues/1
-########## net() function, takes journal, class name(s), and date range as arguments
-net<-function(journ,classselect="all",accselect="all",dates="all"){
-  if("all" %in% classselect) {
-    classselect<-levels(journ$Class)
-  }
-  if("all" %in% accselect) {
-    accselect<-levels(journ$Account)
-  }  
-  if("all" %in% dates) {
-    dates<-c(min(journ$Date),max(journ$Date))
-  }
-  net<-sum(journ$Credit[journ$Class %in% classselect & journ$Account %in% accselect & journ$Date>=dates[1] & journ$Date<=dates[2]],
-           na.rm=T)-sum(journ$Debit[journ$Class %in% classselect & journ$Account %in% accselect & journ$Date>=dates[1] & journ$Date<=dates[2]],
-                        na.rm=T)
-  return(net)
-}
-##########
 
 ########## Net table by class
 net.class<-function(journ,
