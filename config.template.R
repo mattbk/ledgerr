@@ -2,3 +2,6 @@
 # TODO return a list, not series of named variables
 journal1<-gsheet2tbl("https://docs.google.com/spreadsheets/morestuffhere1")
 journal2<-gsheet2tbl("https://docs.google.com/spreadsheets/morestuffhere2")
+
+# Shiny.io application name
+shiny.io<-ledgerr-shiny
