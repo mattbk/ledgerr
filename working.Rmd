@@ -17,9 +17,6 @@ library(gsheet)
 library(R.utils) #for sourceDirectory()
 sourceDirectory("ledgerr/R")
 
-# For Shiny
-library(rsconnect)
-
 # Pull Google sheet locations from another file (journal1, journal2, etc.)
 source("config.R")
 
@@ -64,5 +61,16 @@ a$Net<-rowSums(a[,2:3],na.rm=T)
 # Calculate total--need to clean up
 colSums(a[-1])
 
+
+```
+
+```{r deploy}
+# See Shiny documentation for authorizing computer to deploy to shiny.io.
+
+# For Shiny
+library(rsconnect)
+
+# Deploy
+deployApp()
 
 ```
