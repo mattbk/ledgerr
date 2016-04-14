@@ -9,11 +9,16 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-Should use this document for actual operations and keep actual functions in another document for the public [GitHub repo](https://github.com/mattbk/ledgerr). Shiny will be set up at https://www.shinyapps.io/admin/#/dashboard.
-
 ```{r}
 # Use https://github.com/maxconway/gsheet
 library(gsheet)
+
+# Use the functions in ledgerr (the package that is part of this project) but don't load the package itself--this will let us deploy to Shiny.io more easily.
+library(R.utils) #for sourceDirectory()
+sourceDirectory("ledgerr/R")
+
+# For Shiny
+library(rsconnect)
 
 # Pull Google sheet locations from another file (journal1, journal2, etc.)
 source("config.R")
@@ -39,15 +44,18 @@ journal$Credit<-as.numeric(sub(",","",journal$Credit))
 
 ################# work in progress
 
-# This could replace net.acc, check numbers
+## This could replace net.acc, check numbers
 a<-aggregate(cbind(Credit,Debit=-Debit)~Account,data=journal,function(x) sum(x, na.rm=TRUE),na.action="na.pass")
+# Select by class (modify to include dates)
+#a<-aggregate(cbind(Credit,Debit=-Debit)~Account,data=journal[journal$Class %in% "Bikecicle",],function(x) sum(x, na.rm=TRUE),na.action="na.pass")
 # na.pass: http://stackoverflow.com/a/16844940/2152245
+# This is a column rename on the fly: "Debit=-Debit"
 # Calculate net column
 a$Net<-rowSums(a[,2:3],na.rm=T)
 # Calculate total--need to clean up
 colSums(a[-1])
 
-# This is a column rename on the fly: "Debit=-Debit"
+
 
 # This could replace net.class, check numbers
 a<-aggregate(cbind(Credit,Debit=-Debit)~Class,data=journal,function(x) sum(x, na.rm=TRUE),na.action="na.pass")
@@ -55,10 +63,6 @@ a<-aggregate(cbind(Credit,Debit=-Debit)~Class,data=journal,function(x) sum(x, na
 a$Net<-rowSums(a[,2:3],na.rm=T)
 # Calculate total--need to clean up
 colSums(a[-1])
-
-# This could also replace net.class if in the right layout (http://nicercode.github.io/guides/repeating-things/)
-class.split<-split(journal,journal$Class)
-sapply(class.split, net)
 
 
 ```
