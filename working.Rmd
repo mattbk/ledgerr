@@ -66,6 +66,7 @@ colSums(a[-1])
 
 ```{r deploy}
 # See Shiny documentation for authorizing computer to deploy to shiny.io.
+# TODO add complete steps here on how to set up and deploy
 
 # For Shiny
 library(rsconnect)
