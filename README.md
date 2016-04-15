@@ -19,6 +19,7 @@ Authorize your computer (run once):
 			  token='<TOKEN>',
 			  secret='<SECRET>')`
 
+Important: Your app will be named and deployed according to the name of the folder it is in. So unless you want your app to be named `ledger`, change the folder name before deploying.
 
 Deploy from project root (run to update)  
 `deployApp()`
