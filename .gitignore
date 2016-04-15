@@ -3,4 +3,4 @@
 .Rproj.user
 config.R
 *.Rproj
-rsconnect/
+*.dcf
